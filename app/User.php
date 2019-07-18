@@ -6,8 +6,9 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Model\Question;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Authenticatable
+class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
 
@@ -16,6 +17,17 @@ class User extends Authenticatable
      *
      * @var array
      */
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+
     protected $fillable = [
         'name', 'email', 'password',
     ];
@@ -30,7 +42,8 @@ class User extends Authenticatable
     ];
 
 
-    public function question() {
+    public function question()
+    {
         return $this->hasMany(Question::class);
     }
 
